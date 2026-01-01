@@ -16,11 +16,11 @@ export default function HomeScreen({ navigation }) {
     return unsubscribe;
   }, [navigation]);
 
-  // ✅ GUARANTEED DELETE
-  const handleDelete = async (id) => {
+  // ✅ Delete (state + storage sync)
+  const handleDelete = (id) => {
     setExpenses(prev => {
       const updated = prev.filter(e => String(e.id) !== String(id));
-      saveAllExpenses([...updated].reverse()); // sync storage
+      saveAllExpenses([...updated].reverse());
       return updated;
     });
   };
@@ -32,13 +32,13 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>💰 Expense Tracker</Text>
-
+      {/* Total */}
       <View style={styles.totalCard}>
         <Text style={styles.totalLabel}>Total Expense</Text>
         <Text style={styles.totalAmount}>৳ {totalExpense}</Text>
       </View>
 
+      {/* Buttons */}
       <View style={styles.buttonRow}>
         <Button
           title="➕ Add Expense"
@@ -50,6 +50,7 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
+      {/* Expense List */}
       <FlatList
         data={expenses}
         keyExtractor={(item) => String(item.id)}
@@ -59,6 +60,7 @@ export default function HomeScreen({ navigation }) {
         ListEmptyComponent={
           <Text style={styles.emptyText}>No expenses added yet</Text>
         }
+        contentContainerStyle={{ paddingBottom: 20 }}
       />
     </View>
   );
@@ -69,11 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#F5F5F5',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
   },
   totalCard: {
     backgroundColor: '#4CAF50',
